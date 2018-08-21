@@ -2,6 +2,7 @@ package gw
 
 import (
 	"errors"
+	"fmt"
 
 	sl "github.com/nlopes/slack"
 )
@@ -14,13 +15,20 @@ type slack struct {
 	token    string
 	okColor  string
 	errColor string
+	mentions string
 }
 
-func NewSlack(token, okColor, errColor string) Notifier {
+func NewSlack(token, okColor, errColor string, mentions ...string) Notifier {
+	var mentionStr string
+	for _, m := range mentions {
+		mentionStr = fmt.Sprintf("%v<%v>,", mentionStr, m)
+	}
+
 	return slack{
 		token:    token,
 		okColor:  okColor,
 		errColor: errColor,
+		mentions: mentionStr,
 	}
 }
 
@@ -29,13 +37,14 @@ func (s slack) Send(title, dest, body string, ok bool) error {
 		return errors.New("failed send message: token is empty")
 	}
 	client := sl.New(s.token)
+	slackBody := fmt.Sprintf("%v\n%v", s.mentions, body)
 	at := sl.Attachment{
 		Color: s.okColor,
 		Title: title,
-		Text:  body,
+		Text:  slackBody,
 	}
 
-	if ok {
+	if !ok {
 		at.Color = s.errColor
 	}
 
