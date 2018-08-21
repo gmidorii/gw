@@ -46,3 +46,17 @@ func WrapTime() cmdMiddleware {
 		return cmdFunc(fn)
 	}
 }
+
+func WrapSlack(token, title, channel string) cmdMiddleware {
+	return func(c Cmder) Cmder {
+		fn := func(args []string, stdout, stderr io.Writer) error {
+			err := c.Run(args, stdout, stderr)
+			s := NewSlack(token)
+			if err != nil {
+				return s.Send(title, channel, fmt.Sprintln(err))
+			}
+			return s.Send(title, channel, fmt.Sprintln(err))
+		}
+		return cmdFunc(fn)
+	}
+}

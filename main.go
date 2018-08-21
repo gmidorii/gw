@@ -12,6 +12,7 @@ func run(args []string) error {
 	cmd = Chain(
 		WrapTime(),
 		WrapFirstEcho("=== START ==="),
+		WrapSlack("token", "title", "channel"),
 		WrapEndEcho("=== END ==="),
 	)(cmd)
 	return cmd.Run(args, os.Stdout, os.Stderr)
