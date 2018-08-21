@@ -30,14 +30,12 @@ func (s slack) Send(title, dest, body string, ok bool) error {
 	}
 	client := sl.New(s.token)
 	at := sl.Attachment{
-		Color: "#006400",
+		Color: s.okColor,
 		Title: title,
 		Text:  body,
 	}
 
 	if ok {
-		at.Color = s.okColor
-	} else {
 		at.Color = s.errColor
 	}
 
