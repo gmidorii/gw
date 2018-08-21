@@ -34,7 +34,7 @@ func (c cmdImpl) Run(args []string, stdout, stderr io.Writer) error {
 func run(args []string) error {
 	var cmd gw.Cmder = cmdImpl{}
 
-	s := gw.NewSlack(os.Getenv("SLACK_TOKEN"))
+	s := gw.NewSlack(os.Getenv("SLACK_TOKEN"), "#006400", "#dc143c")
 	channel := os.Getenv("SLACK_CHANNEL")
 
 	cmd = gw.Chain(

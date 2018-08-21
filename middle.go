@@ -52,11 +52,14 @@ func WrapNotify(notifier Notifier, dest string) CmdMiddleware {
 	return func(c Cmder) Cmder {
 		fn := func(args []string, stdout, stderr io.Writer) error {
 			err := c.Run(args, stdout, stderr)
-			title := strings.Join(args, "\\s")
+			title := strings.Join(args, " ")
+
+			ok := true
 			if err != nil {
-				return notifier.Send(title, dest, fmt.Sprintln(err))
+				ok = false
 			}
-			return notifier.Send(title, dest, fmt.Sprintln(err))
+
+			return notifier.Send(title, dest, fmt.Sprintln(err), ok)
 		}
 		return CmdFunc(fn)
 	}
