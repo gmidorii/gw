@@ -8,14 +8,21 @@ import (
 	"os/exec"
 )
 
-type cmd struct {
+type Cmder interface {
+	Run(args []string, stdout, stderr io.Writer) error
 }
 
-func NewCmd() *cmd {
-	return &cmd{}
+type cmdFunc func(args []string, stdout, stderr io.Writer) error
+
+func (c cmdFunc) Run(args []string, stdout, stderr io.Writer) error {
+	return c(args, stdout, stderr)
 }
 
-func (c *cmd) Run(args []string, stdout, stderr io.Writer) error {
+type cmdMiddleware func(Cmder) Cmder
+
+type cmdImpl struct{}
+
+func (c cmdImpl) Run(args []string, stdout, stderr io.Writer) error {
 	if len(args) == 0 {
 		return errors.New("must arguments >= 1")
 	}

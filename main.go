@@ -5,8 +5,11 @@ import (
 	"os"
 )
 
+var mid = []cmdMiddleware{}
+
 func run(args []string) error {
-	cmd := NewCmd()
+	var cmd Cmder = cmdImpl{}
+	cmd = WrapEcho("Hi")(cmd)
 	return cmd.Run(args, os.Stdout, os.Stderr)
 }
 
