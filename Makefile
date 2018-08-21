@@ -1,4 +1,4 @@
-BIN=gwrap
+BIN=gw
 
 build:
 	go build -o $(BIN)
