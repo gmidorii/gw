@@ -1,6 +1,8 @@
 package main
 
-import "fmt"
+import (
+	sl "github.com/nlopes/slack"
+)
 
 type Notifier interface {
 	Send(title, dest, body string) error
@@ -17,6 +19,14 @@ func NewSlack(token string) Notifier {
 }
 
 func (s slack) Send(title, dest, body string) error {
-	fmt.Printf("%v, %v, %v, %v", s.token, title, dest, body)
-	return nil
+	client := sl.New(s.token)
+	at := sl.Attachment{
+		//Color: "",
+		Title: title,
+		Text:  body,
+	}
+	_, _, err := client.PostMessage(dest, "", sl.PostMessageParameters{
+		Attachments: []sl.Attachment{at},
+	})
+	return err
 }
