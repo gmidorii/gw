@@ -3,6 +3,7 @@ package gw
 import (
 	"fmt"
 	"io"
+	"strings"
 	"time"
 )
 
@@ -47,15 +48,15 @@ func WrapTime() CmdMiddleware {
 	}
 }
 
-func WrapSlack(token, title, channel string) CmdMiddleware {
+func WrapNotify(notifier Notifier, dest string) CmdMiddleware {
 	return func(c Cmder) Cmder {
 		fn := func(args []string, stdout, stderr io.Writer) error {
 			err := c.Run(args, stdout, stderr)
-			s := NewSlack(token)
+			title := strings.Join(args, "\\s")
 			if err != nil {
-				return s.Send(title, channel, fmt.Sprintln(err))
+				return notifier.Send(title, dest, fmt.Sprintln(err))
 			}
-			return s.Send(title, channel, fmt.Sprintln(err))
+			return notifier.Send(title, dest, fmt.Sprintln(err))
 		}
 		return CmdFunc(fn)
 	}

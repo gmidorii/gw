@@ -33,10 +33,14 @@ func (c cmdImpl) Run(args []string, stdout, stderr io.Writer) error {
 
 func run(args []string) error {
 	var cmd gw.Cmder = cmdImpl{}
+
+	s := gw.NewSlack(os.Getenv("SLACK_TOKEN"))
+	channel := os.Getenv("SLACK_CHANNEL")
+
 	cmd = gw.Chain(
 		gw.WrapTime(),
 		gw.WrapFirstEcho("=== START ==="),
-		gw.WrapSlack(os.Getenv("SLACK_TOKEN"), "send test", os.Getenv("SLACK_CHANNEL")),
+		gw.WrapNotify(s, channel),
 		gw.WrapEndEcho("=== END ==="),
 	)(cmd)
 	return cmd.Run(args, os.Stdout, os.Stderr)

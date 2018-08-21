@@ -1,6 +1,8 @@
 package gw
 
 import (
+	"errors"
+
 	sl "github.com/nlopes/slack"
 )
 
@@ -19,6 +21,9 @@ func NewSlack(token string) Notifier {
 }
 
 func (s slack) Send(title, dest, body string) error {
+	if s.token == "" {
+		return errors.New("failed send message: token is empty")
+	}
 	client := sl.New(s.token)
 	at := sl.Attachment{
 		//Color: "",
