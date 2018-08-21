@@ -1,10 +1,11 @@
 BIN=gw
+CMD=./cmd
 
 build:
-	go build -o $(BIN)
+	cd $(CMD); go build -o $(BIN)
 
 run: build
-	./$(BIN) ls -l
+	$(CMD)/$(BIN) ls -l
 
 run-err: build
-	./$(BIN) sh error.sh
+	$(CMD)/$(BIN) sh error.sh

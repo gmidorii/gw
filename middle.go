@@ -1,4 +1,4 @@
-package main
+package gw
 
 import (
 	"fmt"
@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-func Chain(out cmdMiddleware, mid ...cmdMiddleware) cmdMiddleware {
+func Chain(out CmdMiddleware, mid ...CmdMiddleware) CmdMiddleware {
 	return func(c Cmder) Cmder {
 		fidx := len(mid) - 1
 		for i := range mid {
@@ -16,38 +16,38 @@ func Chain(out cmdMiddleware, mid ...cmdMiddleware) cmdMiddleware {
 	}
 }
 
-func WrapEndEcho(s string) cmdMiddleware {
+func WrapEndEcho(s string) CmdMiddleware {
 	return func(c Cmder) Cmder {
 		fn := func(args []string, stdout, stderr io.Writer) error {
 			defer fmt.Printf("%v\n", s)
 			return c.Run(args, stdout, stderr)
 		}
-		return cmdFunc(fn)
+		return CmdFunc(fn)
 	}
 }
 
-func WrapFirstEcho(s string) cmdMiddleware {
+func WrapFirstEcho(s string) CmdMiddleware {
 	return func(c Cmder) Cmder {
 		fn := func(args []string, stdout, stderr io.Writer) error {
 			fmt.Printf("%v\n", s)
 			return c.Run(args, stdout, stderr)
 		}
-		return cmdFunc(fn)
+		return CmdFunc(fn)
 	}
 }
 
-func WrapTime() cmdMiddleware {
+func WrapTime() CmdMiddleware {
 	return func(c Cmder) Cmder {
 		fn := func(args []string, stdout, stderr io.Writer) error {
 			s := time.Now()
 			defer fmt.Printf("time:%v \n", time.Now().Sub(s))
 			return c.Run(args, stdout, stderr)
 		}
-		return cmdFunc(fn)
+		return CmdFunc(fn)
 	}
 }
 
-func WrapSlack(token, title, channel string) cmdMiddleware {
+func WrapSlack(token, title, channel string) CmdMiddleware {
 	return func(c Cmder) Cmder {
 		fn := func(args []string, stdout, stderr io.Writer) error {
 			err := c.Run(args, stdout, stderr)
@@ -57,6 +57,6 @@ func WrapSlack(token, title, channel string) cmdMiddleware {
 			}
 			return s.Send(title, channel, fmt.Sprintln(err))
 		}
-		return cmdFunc(fn)
+		return CmdFunc(fn)
 	}
 }

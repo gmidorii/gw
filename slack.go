@@ -1,4 +1,4 @@
-package main
+package gw
 
 import (
 	sl "github.com/nlopes/slack"
