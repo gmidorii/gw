@@ -9,7 +9,11 @@ var mid = []cmdMiddleware{}
 
 func run(args []string) error {
 	var cmd Cmder = cmdImpl{}
-	cmd = WrapEcho("Hi")(cmd)
+	cmd = Chain(
+		WrapTime(),
+		WrapFirstEcho("=== START ==="),
+		WrapEndEcho("=== END ==="),
+	)(cmd)
 	return cmd.Run(args, os.Stdout, os.Stderr)
 }
 

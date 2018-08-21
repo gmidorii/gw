@@ -2,7 +2,6 @@ package main
 
 import (
 	"errors"
-	"fmt"
 	"io"
 	"os"
 	"os/exec"
@@ -26,7 +25,6 @@ func (c cmdImpl) Run(args []string, stdout, stderr io.Writer) error {
 	if len(args) == 0 {
 		return errors.New("must arguments >= 1")
 	}
-	fmt.Println(args)
 	var cmd *exec.Cmd
 	if len(args) == 1 {
 		cmd = exec.Command(args[0])
