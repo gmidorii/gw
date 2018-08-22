@@ -20,7 +20,7 @@ func Chain(out CmdMiddleware, mid ...CmdMiddleware) CmdMiddleware {
 func WrapEndEcho(s string) CmdMiddleware {
 	return func(c Cmder) Cmder {
 		fn := func(args []string, stdout, stderr io.Writer) error {
-			defer fmt.Printf("%v\n", s)
+			defer fmt.Fprintf(stdout, "%v\n", s)
 			return c.Run(args, stdout, stderr)
 		}
 		return CmdFunc(fn)
@@ -30,7 +30,7 @@ func WrapEndEcho(s string) CmdMiddleware {
 func WrapFirstEcho(s string) CmdMiddleware {
 	return func(c Cmder) Cmder {
 		fn := func(args []string, stdout, stderr io.Writer) error {
-			fmt.Printf("%v\n", s)
+			fmt.Fprintf(stdout, "%v\n", s)
 			return c.Run(args, stdout, stderr)
 		}
 		return CmdFunc(fn)
