@@ -41,7 +41,9 @@ func WrapTime() CmdMiddleware {
 	return func(c Cmder) Cmder {
 		fn := func(args []string, stdout, stderr io.Writer) error {
 			s := time.Now()
-			defer fmt.Printf("time:%v \n", time.Now().Sub(s))
+			defer func(s time.Time) {
+				fmt.Fprintf(stdout, "time:%v \n", time.Now().Sub(s))
+			}(s)
 			return c.Run(args, stdout, stderr)
 		}
 		return CmdFunc(fn)
