@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	"fmt"
 	"io"
 	"log"
 	"os"
@@ -9,6 +10,23 @@ import (
 
 	"github.com/midorigreen/gw"
 )
+
+const helpMesage = `
+Usage: gw [command]
+
+  gw is commad wrapping tool.
+
+Function:
+  - start/end message
+  - measure time
+  - notification (slack)
+
+Slack Notification:
+  must export 3 environment variables
+  - GW_SLACK_TOKEN=xxxx
+  - GW_SLACK_CHANNEL=#hoge
+  - GW_SLACK_MENTION=@hoge,@fuga
+`
 
 type cmdImpl struct{}
 
@@ -48,6 +66,10 @@ func run(args []string) error {
 
 func main() {
 	args := os.Args
+	if len(args) < 2 || args[1] == "-h" {
+		fmt.Println(helpMesage)
+		return
+	}
 	if err := run(args[1:]); err != nil {
 		log.Fatalf("failed wrap: %v", err)
 	}

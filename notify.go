@@ -3,6 +3,7 @@ package gw
 import (
 	"errors"
 	"fmt"
+	"strings"
 
 	sl "github.com/nlopes/slack"
 )
@@ -18,9 +19,9 @@ type slack struct {
 	mentions string
 }
 
-func NewSlack(token, okColor, errColor string, mentions ...string) Notifier {
+func NewSlack(token, okColor, errColor string, mentions string) Notifier {
 	var mentionStr string
-	for _, m := range mentions {
+	for _, m := range strings.Split(mentions, ",") {
 		mentionStr = fmt.Sprintf("%v<%v>,", mentionStr, m)
 	}
 
